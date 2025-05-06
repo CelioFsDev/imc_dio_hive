@@ -33,11 +33,13 @@ class _AddImcPageState extends State<AddImcPage> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  imcViewmodel.salvarImc();
+                  setState(() {
+                    imcViewmodel.salvarBmi();
+                  });
+                  imcViewmodel.clearBmi();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('IMC salvo com sucesso!')),
                   );
-                  imcViewmodel.clearIMC();
                   Navigator.pop(context);
                 },
                 child: const Text('Salvar IMC'),

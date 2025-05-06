@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:imc_dio_hive/data/domain/usecases/calculate_bmi_usecase.dart';
+import 'package:imc_dio_hive/data/domain/usecases/save_bmi_usecase.dart';
 import 'package:imc_dio_hive/data/models/imc_model.dart';
 
 class AddImcViewmodel {
@@ -7,36 +9,26 @@ class AddImcViewmodel {
   double imcResult = 0.0;
   String menssage = '';
 
-  void calculaImc() {
+  void calculaBmi() {
     final weight = double.tryParse(weightController.text);
     final height = double.tryParse(heightController.text);
 
     if (weight != null && height != null) {
-      final heightInMeters = heightController.text.contains('.')
-          ? height
-          : height / 100;
-      imcResult = weight / (heightInMeters * heightInMeters);
-
-      if (imcResult < 18.5) {
-        menssage = 'Abaixo do peso';
-      } else if (imcResult >= 18.5 && imcResult < 24.9) {
-        menssage = 'Peso normal';
-      } else if (imcResult >= 25 && imcResult < 29.9) {
-        menssage = 'Sobrepeso';
-      } else {
-        menssage = 'Obesidade';
-      }
+      final usecase = CalculateBmiUsecase();
+      final result = usecase.execute(weight, height);
+      imcResult = result.bmi;
+      menssage = result.message;
     } else {
-      menssage = 'Preencha todos os campos!';
+      menssage = 'Por favor, preencha os campos corretamente.';
     }
   }
 
-  void salvarImc() {
+  void salvarBmi() {
     final weight = double.tryParse(weightController.text);
     final height = double.tryParse(heightController.text);
 
     if (weight != null && height != null) {
-      calculaImc();
+      calculaBmi();
       final newBmi = BmiModel(
         weight: weight,
         height: height,
@@ -44,11 +36,14 @@ class AddImcViewmodel {
         menssage: menssage,
         data: DateTime.now(),
       );
-      BmiModel.salvar(newBmi);
+      final saveBmiUseCase = SaveBmiUseCase();
+      saveBmiUseCase.call(newBmi);
+    } else {
+      menssage = 'Por favor, preencha os campos corretamente.';
     }
   }
 
-  void clearIMC() {
+  void clearBmi() {
     weightController.clear();
     heightController.clear();
     imcResult = 0.0;
