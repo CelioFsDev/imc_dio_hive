@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:imc_dio_hive/data/domain/usecases/calculate_bmi_usecase.dart';
 import 'package:imc_dio_hive/data/domain/usecases/save_bmi_usecase.dart';
-import 'package:imc_dio_hive/data/models/imc_model.dart';
+import 'package:imc_dio_hive/data/models/bmi_model.dart';
 
 class AddImcViewmodel {
   final TextEditingController weightController = TextEditingController();
