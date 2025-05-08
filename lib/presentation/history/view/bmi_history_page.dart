@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:imc_dio_hive/data/models/bmi_model.dart';
 
-class BmiHistoryPage extends StatelessWidget {
+class BmiHistoryPage extends StatefulWidget {
   const BmiHistoryPage({super.key});
+
+  @override
+  State<BmiHistoryPage> createState() => _BmiHistoryPageState();
+}
+
+class _BmiHistoryPageState extends State<BmiHistoryPage> {
+  late Future<List<BmiModel>> _bmiListFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _bmiListFuture = BmiModel.listar();
+  }
+
+  Future<void> _deleteBmi(BmiModel bmi) async {
+    await bmi.delete(); // Método para deletar o item no banco de dados
+    setState(() {
+      _bmiListFuture = BmiModel.listar(); // Atualiza a lista após a exclusão
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Historico de IMC'), centerTitle: true),
       body: FutureBuilder<List<BmiModel>>(
-        future: BmiModel.listar(), // Obtém a lista de registros de BMI
+        future: _bmiListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -44,9 +64,42 @@ class BmiHistoryPage extends StatelessWidget {
                       'Messagem: ${bmi.menssage}\n'
                       'Peso: ${bmi.weight} kg | Altura: ${bmi.height} m',
                     ),
-                    trailing: Text(
-                      '${bmi.data.day}/${bmi.data.month}/${bmi.data.year}',
-                      style: const TextStyle(color: Colors.grey),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${bmi.data.day}/${bmi.data.month}/${bmi.data.year}',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirmar Exclusão'),
+                                content: const Text(
+                                    'Tem certeza que deseja excluir este item?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: const Text('Excluir'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await _deleteBmi(bmi);
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 );
