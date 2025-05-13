@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:imc_dio_hive/presentation/addimc/view/add_imc_page.dart';
+import 'package:imc_dio_hive/presentation/config/view/bmi_config.dart';
 import 'package:imc_dio_hive/presentation/history/view/bmi_history_page.dart';
+import 'package:imc_dio_hive/presentation/info/view/bmi_info_page.dart';
 
 class DashboardHomePage extends StatelessWidget {
   const DashboardHomePage({super.key});
@@ -48,6 +50,10 @@ class DashboardHomePage extends StatelessWidget {
               color: Colors.orange,
               onTap: () {
                 // Navegar para informações sobre o IMC
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BmiInfoPage()),
+                );
               },
             ),
             _buildDashboardCard(
@@ -56,6 +62,12 @@ class DashboardHomePage extends StatelessWidget {
               color: Colors.purple,
               onTap: () {
                 // Navegar para configurações
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BmiConfigPage(),
+                  ),
+                );
               },
             ),
           ],
