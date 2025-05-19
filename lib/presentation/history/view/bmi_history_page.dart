@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:imc_dio_hive/constants/app_strings.dart';
 import 'package:imc_dio_hive/data/models/bmi_model.dart';
 
 class BmiHistoryPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _BmiHistoryPageState extends State<BmiHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Historico de IMC'), centerTitle: true),
+      appBar: AppBar(title: Text(AppStrings.historicoImc), centerTitle: true),
       body: FutureBuilder<List<BmiModel>>(
         future: _bmiListFuture,
         builder: (context, snapshot) {
@@ -76,23 +77,28 @@ class _BmiHistoryPageState extends State<BmiHistoryPage> {
                           onPressed: () async {
                             final confirm = await showDialog<bool>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Confirmar Exclusão'),
-                                content: const Text(
-                                    'Tem certeza que deseja excluir este item?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: const Text('Cancelar'),
+                              builder:
+                                  (context) => AlertDialog(
+                                    title: const Text('Confirmar Exclusão'),
+                                    content: const Text(
+                                      'Tem certeza que deseja excluir este item?',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed:
+                                            () => Navigator.of(
+                                              context,
+                                            ).pop(false),
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed:
+                                            () =>
+                                                Navigator.of(context).pop(true),
+                                        child: const Text('Excluir'),
+                                      ),
+                                    ],
                                   ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text('Excluir'),
-                                  ),
-                                ],
-                              ),
                             );
                             if (confirm == true) {
                               await _deleteBmi(bmi);

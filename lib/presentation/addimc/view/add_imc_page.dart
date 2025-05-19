@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:imc_dio_hive/constants/app_strings.dart';
 import 'package:imc_dio_hive/presentation/addimc/viewmodel/add_imc_viewmodel.dart';
+import 'package:imc_dio_hive/widgets/custom_button.dart';
+import 'package:imc_dio_hive/widgets/custom_text.dart';
 
 class AddImcPage extends StatefulWidget {
   const AddImcPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddImcPageState createState() => _AddImcPageState();
 }
 
@@ -14,7 +18,10 @@ class _AddImcPageState extends State<AddImcPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Adicionar IMC'), centerTitle: true),
+      appBar: AppBar(
+        title: const CustomText(text: AppStrings.adicionarImc),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -60,7 +67,8 @@ class _AddImcPageState extends State<AddImcPage> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 24.0),
-                  ElevatedButton(
+                  CustomButton(
+                    text: 'Salvar IMC',
                     onPressed: () {
                       setState(() {
                         imcViewmodel.salvarBmi();
@@ -71,16 +79,6 @@ class _AddImcPageState extends State<AddImcPage> {
                       );
                       Navigator.pop(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Salvar IMC',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
                   ),
                 ],
               ),
